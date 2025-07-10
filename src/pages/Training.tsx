@@ -172,13 +172,13 @@ export const Training: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-green-900">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+          <h1 className="text-4xl font-bold text-white mb-4">
             PLSTM Model Training
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-300">
             Train a Parallel Long Short-Term Memory model for land subsidence prediction
           </p>
         </div>
@@ -190,14 +190,14 @@ export const Training: React.FC = () => {
               <div
                 key={index}
                 className={`flex items-center space-x-2 ${
-                  index <= currentPhase ? 'text-blue-600' : 'text-gray-400'
+                  index <= currentPhase ? 'text-green-400' : 'text-gray-500'
                 }`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                     index <= currentPhase
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-300 text-gray-500'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-600 text-gray-400'
                   }`}
                 >
                   {index + 1}
@@ -206,9 +206,9 @@ export const Training: React.FC = () => {
               </div>
             ))}
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-700 rounded-full h-2">
             <div
-              className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+              className="bg-green-600 h-2 rounded-full transition-all duration-500"
               style={{ width: `${((currentPhase + 1) / phases.length) * 100}%` }}
             />
           </div>
@@ -224,8 +224,8 @@ export const Training: React.FC = () => {
             />
             
             {isProcessing && (
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
+                <h3 className="text-lg font-semibold text-white mb-4">
                   Processing Data...
                 </h3>
                 <div className="space-y-3">
@@ -236,7 +236,7 @@ export const Training: React.FC = () => {
                         step.status === 'processing' ? 'bg-blue-500 animate-pulse' :
                         'bg-gray-300'
                       }`} />
-                      <span className="text-sm text-gray-600">{step.title}</span>
+                      <span className="text-sm text-gray-300">{step.title}</span>
                     </div>
                   ))}
                 </div>
@@ -249,37 +249,37 @@ export const Training: React.FC = () => {
         {currentPhase === 1 && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-800">
+                  <h3 className="text-lg font-semibold text-white">
                     Raw Data Summary
                   </h3>
-                  <Eye className="h-5 w-5 text-gray-500" />
+                  <Eye className="h-5 w-5 text-gray-400" />
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Total Records:</span>
-                    <span className="font-medium">{processedData.length}</span>
+                    <span className="text-gray-300">Total Records:</span>
+                    <span className="font-medium text-white">{processedData.length}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Date Range:</span>
-                    <span className="font-medium">2022-2024</span>
+                    <span className="text-gray-300">Date Range:</span>
+                    <span className="font-medium text-white">2022-2024</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Coordinate System:</span>
-                    <span className="font-medium">UTM 48S</span>
+                    <span className="text-gray-300">Coordinate System:</span>
+                    <span className="font-medium text-white">UTM 48S</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-800">
+                  <h3 className="text-lg font-semibold text-white">
                     Cleaned Data
                   </h3>
                   <button
                     onClick={downloadCleanedData}
-                    className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
+                    className="flex items-center space-x-2 text-green-400 hover:text-green-300"
                   >
                     <Download className="h-4 w-4" />
                     <span>Download</span>
@@ -287,16 +287,16 @@ export const Training: React.FC = () => {
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Cleaned Records:</span>
-                    <span className="font-medium">{cleanedData.length}</span>
+                    <span className="text-gray-300">Cleaned Records:</span>
+                    <span className="font-medium text-white">{cleanedData.length}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Quality Score:</span>
+                    <span className="text-gray-300">Quality Score:</span>
                     <span className="font-medium text-green-600">95.2%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Outliers Removed:</span>
-                    <span className="font-medium">{processedData.length - cleanedData.length}</span>
+                    <span className="text-gray-300">Outliers Removed:</span>
+                    <span className="font-medium text-white">{processedData.length - cleanedData.length}</span>
                   </div>
                 </div>
               </div>
@@ -311,7 +311,7 @@ export const Training: React.FC = () => {
             <div className="flex justify-center">
               <button
                 onClick={() => setCurrentPhase(2)}
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors"
               >
                 Proceed to Training
               </button>
@@ -333,9 +333,9 @@ export const Training: React.FC = () => {
         {/* Phase 3: Model Evaluation */}
         {currentPhase === 3 && modelMetrics && (
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-800">
+                <h3 className="text-lg font-semibold text-white">
                   Training Complete
                 </h3>
                 <div className="flex space-x-3">
@@ -348,7 +348,7 @@ export const Training: React.FC = () => {
                   </button>
                   <button
                     onClick={downloadCleanedData}
-                    className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
                   >
                     <FileText className="h-4 w-4" />
                     <span>Download Data</span>
@@ -357,10 +357,10 @@ export const Training: React.FC = () => {
               </div>
               <div className="text-center">
                 <BarChart3 className="h-16 w-16 text-green-600 mx-auto mb-4" />
-                <h4 className="text-xl font-semibold text-gray-800 mb-2">
+                <h4 className="text-xl font-semibold text-white mb-2">
                   PLSTM Model Successfully Trained
                 </h4>
-                <p className="text-gray-600">
+                <p className="text-gray-300">
                   Your model achieved {(modelMetrics.accuracy * 100).toFixed(1)}% accuracy 
                   and is ready for deployment.
                 </p>

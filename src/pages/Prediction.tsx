@@ -93,22 +93,22 @@ export const Prediction: React.FC = () => {
     : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-green-900">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+          <h1 className="text-4xl font-bold text-white mb-4">
             Real-Time Land Subsidence Prediction
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-300">
             Monitor and predict land subsidence patterns in real-time using PLSTM
           </p>
         </div>
 
         {/* Control Panel */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 border border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-white">
                 Prediction Control
               </h3>
               <div className="flex items-center space-x-2">
@@ -125,7 +125,7 @@ export const Prediction: React.FC = () => {
                 </button>
                 <button
                   onClick={resetPrediction}
-                  className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                  className="flex items-center space-x-2 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
                 >
                   <RotateCcw className="h-4 w-4" />
                   <span>Reset</span>
@@ -135,16 +135,16 @@ export const Prediction: React.FC = () => {
             
             <div className="flex items-center space-x-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">
+                <div className="text-2xl font-bold text-green-400">
                   {predictions.length}
                 </div>
-                <div className="text-sm text-gray-600">Predictions</div>
+                <div className="text-sm text-gray-300">Predictions</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">
                   {(averageConfidence * 100).toFixed(1)}%
                 </div>
-                <div className="text-sm text-gray-600">Avg Confidence</div>
+                <div className="text-sm text-gray-300">Avg Confidence</div>
               </div>
             </div>
           </div>
@@ -153,38 +153,38 @@ export const Prediction: React.FC = () => {
         {/* Real-time Status */}
         {latestPrediction && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
               <div className="flex items-center justify-between mb-2">
-                <TrendingUp className="h-8 w-8 text-blue-600" />
-                <span className="text-sm text-gray-500">Latest Prediction</span>
+                <TrendingUp className="h-8 w-8 text-green-400" />
+                <span className="text-sm text-gray-400">Latest Prediction</span>
               </div>
-              <div className="text-2xl font-bold text-gray-800">
+              <div className="text-2xl font-bold text-white">
                 {latestPrediction.predictedSubsidence.toFixed(4)}m
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-300">
                 Actual: {latestPrediction.actualSubsidence.toFixed(4)}m
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
               <div className="flex items-center justify-between mb-2">
                 <AlertTriangle className="h-8 w-8 text-orange-600" />
-                <span className="text-sm text-gray-500">Risk Level</span>
+                <span className="text-sm text-gray-400">Risk Level</span>
               </div>
               <div className={`text-xl font-bold px-3 py-1 rounded-full ${getRiskColor(latestPrediction.riskLevel)}`}>
                 {latestPrediction.riskLevel.toUpperCase()}
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
               <div className="flex items-center justify-between mb-2">
                 <MapPin className="h-8 w-8 text-green-600" />
-                <span className="text-sm text-gray-500">Confidence</span>
+                <span className="text-sm text-gray-400">Confidence</span>
               </div>
-              <div className="text-2xl font-bold text-gray-800">
+              <div className="text-2xl font-bold text-white">
                 {(latestPrediction.confidence * 100).toFixed(1)}%
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+              <div className="w-full bg-gray-600 rounded-full h-2 mt-2">
                 <div
                   className="bg-green-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${latestPrediction.confidence * 100}%` }}
@@ -192,9 +192,9 @@ export const Prediction: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
               <div className="flex items-center justify-between mb-2">
-                <div className="text-sm text-gray-500">Status</div>
+                <div className="text-sm text-gray-400">Status</div>
               </div>
               <div className={`flex items-center space-x-2 ${
                 isRunning ? 'text-green-600' : 'text-gray-600'
@@ -206,7 +206,7 @@ export const Prediction: React.FC = () => {
                   {isRunning ? 'Running' : 'Stopped'}
                 </span>
               </div>
-              <div className="text-sm text-gray-600 mt-1">
+              <div className="text-sm text-gray-300 mt-1">
                 {isRunning ? 'Real-time monitoring active' : 'Click start to begin'}
               </div>
             </div>
@@ -224,29 +224,29 @@ export const Prediction: React.FC = () => {
             />
 
             {/* Recent Predictions Table */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
+              <h3 className="text-lg font-semibold text-white mb-4">
                 Recent Predictions
               </h3>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm text-gray-300">
                   <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2">Timestamp</th>
-                      <th className="text-left py-2">Predicted</th>
-                      <th className="text-left py-2">Actual</th>
-                      <th className="text-left py-2">Error</th>
-                      <th className="text-left py-2">Confidence</th>
-                      <th className="text-left py-2">Risk Level</th>
+                    <tr className="border-b border-gray-600">
+                      <th className="text-left py-2 text-white">Timestamp</th>
+                      <th className="text-left py-2 text-white">Predicted</th>
+                      <th className="text-left py-2 text-white">Actual</th>
+                      <th className="text-left py-2 text-white">Error</th>
+                      <th className="text-left py-2 text-white">Confidence</th>
+                      <th className="text-left py-2 text-white">Risk Level</th>
                     </tr>
                   </thead>
                   <tbody>
                     {predictions.slice(-10).reverse().map((prediction, index) => (
-                      <tr key={index} className="border-b hover:bg-gray-50">
+                      <tr key={index} className="border-b border-gray-700 hover:bg-gray-700">
                         <td className="py-2">
                           {new Date(prediction.timestamp).toLocaleString()}
                         </td>
-                        <td className="py-2 font-medium">
+                        <td className="py-2 font-medium text-white">
                           {prediction.predictedSubsidence.toFixed(4)}m
                         </td>
                         <td className="py-2">
@@ -274,17 +274,17 @@ export const Prediction: React.FC = () => {
 
         {/* Empty State */}
         {predictions.length === 0 && (
-          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-            <TrendingUp className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+          <div className="bg-gray-800 rounded-lg shadow-lg p-12 text-center border border-gray-700">
+            <TrendingUp className="h-16 w-16 text-gray-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-white mb-2">
               Ready for Real-Time Prediction
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-300 mb-6">
               Click the "Start" button to begin real-time land subsidence monitoring and prediction.
             </p>
             <button
               onClick={togglePrediction}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors"
             >
               Start Prediction
             </button>

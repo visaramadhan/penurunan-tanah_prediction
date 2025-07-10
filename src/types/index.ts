@@ -49,3 +49,13 @@ export interface PLSTMConfig {
   learningRate: number;
   parallelRegions: number;
 }
+
+export interface MultiFileData {
+  fileName: string;
+  data: ProcessedData[];
+  dateRange: {
+    start: string;
+    end: string;
+  };
+  quality: number;
+}

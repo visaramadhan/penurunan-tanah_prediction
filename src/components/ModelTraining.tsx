@@ -37,13 +37,13 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
   const getStepColor = (status: TrainingStep['status']) => {
     switch (status) {
       case 'completed':
-        return 'bg-green-50 border-green-200';
+        return 'bg-gray-800 border-green-600';
       case 'processing':
-        return 'bg-blue-50 border-blue-200';
+        return 'bg-gray-800 border-blue-600';
       case 'error':
-        return 'bg-red-50 border-red-200';
+        return 'bg-gray-800 border-red-600';
       default:
-        return 'bg-gray-50 border-gray-200';
+        return 'bg-gray-800 border-gray-600';
     }
   };
 
@@ -86,12 +86,12 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
   return (
     <div className="space-y-6">
       {/* Configuration Panel */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">PLSTM Configuration</h3>
+          <h3 className="text-lg font-semibold text-white">PLSTM Configuration</h3>
           <button
             onClick={() => setShowConfig(!showConfig)}
-            className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
+            className="flex items-center space-x-2 text-green-400 hover:text-green-300"
           >
             <Settings className="h-5 w-5" />
             <span>{showConfig ? 'Hide' : 'Show'} Config</span>
@@ -101,7 +101,7 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
         {showConfig && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 LSTM Layers
               </label>
               <input
@@ -110,11 +110,11 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
                 max="10"
                 value={config.layers}
                 onChange={(e) => handleConfigChange('layers', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Neurons per Layer
               </label>
               <input
@@ -124,11 +124,11 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
                 step="32"
                 value={config.neurons}
                 onChange={(e) => handleConfigChange('neurons', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Training Epochs
               </label>
               <input
@@ -137,11 +137,11 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
                 max="1000"
                 value={config.epochs}
                 onChange={(e) => handleConfigChange('epochs', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Batch Size
               </label>
               <input
@@ -150,11 +150,11 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
                 max="256"
                 value={config.batchSize}
                 onChange={(e) => handleConfigChange('batchSize', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Learning Rate
               </label>
               <input
@@ -164,11 +164,11 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
                 step="0.0001"
                 value={config.learningRate}
                 onChange={(e) => handleConfigChange('learningRate', parseFloat(e.target.value))}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Parallel Regions
               </label>
               <input
@@ -177,7 +177,7 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
                 max="20"
                 value={config.parallelRegions}
                 onChange={(e) => handleConfigChange('parallelRegions', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -185,13 +185,13 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
       </div>
 
       {/* Training Steps */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-800">Training Progress</h3>
+          <h3 className="text-lg font-semibold text-white">Training Progress</h3>
           <button
             onClick={startTraining}
             disabled={isTraining}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isTraining ? 'Training...' : 'Start Training'}
           </button>
@@ -207,21 +207,21 @@ export const ModelTraining: React.FC<ModelTrainingProps> = ({
                 <div className="flex items-center space-x-3">
                   {getStepIcon(step.status)}
                   <div>
-                    <h4 className="font-medium text-gray-800">{step.title}</h4>
-                    <p className="text-sm text-gray-600">{step.description}</p>
+                    <h4 className="font-medium text-white">{step.title}</h4>
+                    <p className="text-sm text-gray-300">{step.description}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-medium text-gray-700">
+                  <div className="text-sm font-medium text-gray-300">
                     {step.progress}%
                   </div>
                 </div>
               </div>
               
               {step.status === 'processing' && (
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-600 rounded-full h-2">
                   <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    className="bg-green-600 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${step.progress}%` }}
                   />
                 </div>

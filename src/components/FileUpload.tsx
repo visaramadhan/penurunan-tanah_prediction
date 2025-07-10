@@ -102,13 +102,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           </p>
         </div>
       ) : (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+        <div className="bg-gray-800 border border-green-600 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <File className="h-8 w-8 text-green-600" />
               <div>
-                <p className="font-medium text-green-800">{uploadedFile.name}</p>
-                <p className="text-sm text-green-600">
+                <p className="font-medium text-white">{uploadedFile.name}</p>
+                <p className="text-sm text-green-400">
                   {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
                 </p>
               </div>
@@ -124,10 +124,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       )}
 
       {error && (
-        <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="mt-4 bg-red-900 border border-red-600 rounded-lg p-4">
           <div className="flex items-center space-x-2">
             <AlertCircle className="h-5 w-5 text-red-600" />
-            <p className="text-sm text-red-800">{error}</p>
+            <p className="text-sm text-red-300">{error}</p>
           </div>
         </div>
       )}

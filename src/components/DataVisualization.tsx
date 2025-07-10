@@ -106,8 +106,8 @@ export const DataVisualization: React.FC<DataVisualizationProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">{title}</h3>
+    <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
+      <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
       {renderChart()}
     </div>
   );
