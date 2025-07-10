@@ -428,7 +428,7 @@ export const Documentation: React.FC = () => {
                       <div className="w-4 h-4 bg-green-500 rounded-full"></div>
                       <div>
                         <span className="text-white font-medium">Low Risk</span>
-                        <p className="text-gray-400 text-sm">Subsidence < 0.1m/year</p>
+                        <p className="text-gray-400 text-sm">Subsidence &lt; 0.1m/year</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -449,7 +449,7 @@ export const Documentation: React.FC = () => {
                       <div className="w-4 h-4 bg-red-500 rounded-full"></div>
                       <div>
                         <span className="text-white font-medium">Critical Risk</span>
-                        <p className="text-gray-400 text-sm">Subsidence > 0.5m/year</p>
+                        <p className="text-gray-400 text-sm">Subsidence &gt; 0.5m/year</p>
                       </div>
                     </div>
                   </div>
@@ -472,6 +472,7 @@ export const Documentation: React.FC = () => {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-white">< 70%</span>
+                      <span className="text-white">&lt; 70%</span>
                       <span className="text-red-400">Poor</span>
                     </div>
                   </div>
