@@ -471,7 +471,6 @@ export const Documentation: React.FC = () => {
                       <span className="text-yellow-400">Fair</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-white">< 70%</span>
                       <span className="text-white">&lt; 70%</span>
                       <span className="text-red-400">Poor</span>
                     </div>
