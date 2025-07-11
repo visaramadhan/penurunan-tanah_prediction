@@ -214,7 +214,6 @@ export const DataPreviewComponent: React.FC<DataPreviewProps> = ({
                     checked={selectedPrimary.includes(variable)}
                     onChange={() => handleVariableToggle(variable, 'primary')}
                     className="form-checkbox h-4 w-4 text-green-600"
-                    disabled={variable === 'subsidence'} // Target variable
                   />
                   <div className="flex-1">
                     <div className="text-white font-medium capitalize">{variable}</div>

@@ -40,28 +40,6 @@ const Navigation: React.FC = () => {
               <span>Model Training</span>
             </Link>
             <Link
-              to="/prediction"
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                isActive('/prediction') 
-                  ? 'bg-green-800 text-green-300' 
-                  : 'text-gray-300 hover:text-green-400'
-              }`}
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span>Real-Time Prediction</span>
-            </Link>
-            <Link
-              to="/map"
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                isActive('/map') 
-                  ? 'bg-green-800 text-green-300' 
-                  : 'text-gray-300 hover:text-green-400'
-              }`}
-            >
-              <Map className="h-5 w-5" />
-              <span>Interactive Map</span>
-            </Link>
-            <Link
               to="/documentation"
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                 isActive('/documentation') 
@@ -98,30 +76,6 @@ const Navigation: React.FC = () => {
               >
                 <Brain className="h-5 w-5" />
                 <span>Model Training</span>
-              </Link>
-              <Link
-                to="/prediction"
-                className={`flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors ${
-                  isActive('/prediction') 
-                    ? 'bg-green-800 text-green-300' 
-                    : 'text-gray-300 hover:text-green-400'
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <BarChart3 className="h-5 w-5" />
-                <span>Real-Time Prediction</span>
-              </Link>
-              <Link
-                to="/map"
-                className={`flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors ${
-                  isActive('/map') 
-                    ? 'bg-green-800 text-green-300' 
-                    : 'text-gray-300 hover:text-green-400'
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Map className="h-5 w-5" />
-                <span>Interactive Map</span>
               </Link>
               <Link
                 to="/documentation"
@@ -223,8 +177,6 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<Training />} />
-          <Route path="/prediction" element={<Prediction />} />
-          <Route path="/map" element={<MapView />} />
           <Route path="/documentation" element={<Documentation />} />
         </Routes>
       </div>
