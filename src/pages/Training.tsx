@@ -1,125 +1,105 @@
-import React, { useState } from 'react';
-import { Download, Eye, FileText, BarChart3 } from 'lucide-react';
-import { FileUpload } from '../components/FileUpload';
-import { DataVisualization } from '../components/DataVisualization';
-import { ModelTraining } from '../components/ModelTraining';
+import React, { useState, useEffect } from 'react';
+import { Download, Eye, FileText, BarChart3, Play, Database } from 'lucide-react';
+import { DataPreviewComponent } from '../components/DataPreview';
+import { DetailedTraining } from '../components/DetailedTraining';
 import { EvaluationMetrics } from '../components/EvaluationMetrics';
-import { processRinexData, calculateSubsidence, cleanData } from '../utils/dataProcessing';
+import { loadPadangData } from '../utils/dataLoader';
 import { PLSTMModel } from '../utils/plstm';
-import { TrainingStep, PLSTMConfig, ModelMetrics, ProcessedData } from '../types';
+import { TrainingStep, PLSTMConfig, ModelMetrics, DataPreview, VariableSelection } from '../types';
 
 export const Training: React.FC = () => {
   const [currentPhase, setCurrentPhase] = useState(0);
-  const [rawData, setRawData] = useState<string>('');
-  const [processedData, setProcessedData] = useState<ProcessedData[]>([]);
-  const [cleanedData, setCleanedData] = useState<ProcessedData[]>([]);
+  const [dataPreview, setDataPreview] = useState<DataPreview | null>(null);
+  const [selectedVariables, setSelectedVariables] = useState<VariableSelection>({
+    primary: ['easting', 'northing', 'height'],
+    secondary: [],
+    environmental: []
+  });
   const [trainedModel, setTrainedModel] = useState<PLSTMModel | null>(null);
   const [modelMetrics, setModelMetrics] = useState<ModelMetrics | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [config, setConfig] = useState<PLSTMConfig>({
     layers: 3,
     neurons: 128,
-    epochs: 100,
+    epochs: 50,
     batchSize: 32,
     learningRate: 0.001,
-    parallelRegions: 4
+    parallelRegions: 4,
+    sequenceLength: 30,
+    dropoutRate: 0.2,
+    validationSplit: 0.2
   });
 
   const [trainingSteps, setTrainingSteps] = useState<TrainingStep[]>([
     {
       id: 'data-loading',
-      title: 'Data Loading & Validation',
-      description: 'Loading RINEX data and validating format',
-      status: 'pending',
-      progress: 0
-    },
-    {
-      id: 'coordinate-processing',
-      title: 'Coordinate Processing',
-      description: 'Converting RINEX to coordinate system (UTM 48S)',
-      status: 'pending',
-      progress: 0
-    },
-    {
-      id: 'subsidence-calculation',
-      title: 'Subsidence Calculation',
-      description: 'Calculating yearly land subsidence values',
+      title: 'Loading Data dari Folder datapdg',
+      description: 'Membaca data penurunan tanah Padang 2021-2024',
       status: 'pending',
       progress: 0
     },
     {
       id: 'data-cleaning',
       title: 'Data Cleaning & Preprocessing',
-      description: 'Removing outliers and preparing time-series data',
+      description: 'Membersihkan dan memproses data mentah',
+      status: 'pending',
+      progress: 0
+    },
+    {
+      id: 'feature-engineering',
+      title: 'Feature Engineering',
+      description: 'Membuat fitur tambahan untuk model',
+      status: 'pending',
+      progress: 0
+    },
+    {
+      id: 'sequence-preparation',
+      title: 'Sequence Preparation',
+      description: 'Menyiapkan sequence untuk LSTM',
       status: 'pending',
       progress: 0
     },
     {
       id: 'model-architecture',
       title: 'PLSTM Architecture Setup',
-      description: 'Initializing parallel LSTM model structure',
+      description: 'Inisialisasi arsitektur model PLSTM',
       status: 'pending',
       progress: 0
     },
     {
       id: 'model-training',
       title: 'Model Training',
-      description: 'Training PLSTM with time-series sequences',
+      description: 'Training PLSTM dengan data time-series',
       status: 'pending',
       progress: 0
     },
     {
       id: 'model-evaluation',
       title: 'Model Evaluation',
-      description: 'Calculating MSE, RMSE, MAE metrics',
+      description: 'Evaluasi performa model dan metrik',
       status: 'pending',
       progress: 0
     }
   ]);
 
   const phases = [
-    'Data Upload',
-    'Data Processing',
+    'Load Data',
+    'Preview & Variable Selection',
     'Model Training',
     'Model Evaluation'
   ];
 
-  const handleFileUpload = async (file: File, content: string) => {
-    setIsProcessing(true);
-    setRawData(content);
-    
+  const loadData = async () => {
+    setIsLoading(true);
     try {
-      // Simulate data processing steps
-      updateTrainingStep('data-loading', { status: 'processing' });
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const rinexData = processRinexData(content);
-      updateTrainingStep('data-loading', { status: 'completed', progress: 100 });
-      
-      updateTrainingStep('coordinate-processing', { status: 'processing' });
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const processed = calculateSubsidence(rinexData);
-      setProcessedData(processed);
-      updateTrainingStep('coordinate-processing', { status: 'completed', progress: 100 });
-      
-      updateTrainingStep('subsidence-calculation', { status: 'processing' });
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      updateTrainingStep('subsidence-calculation', { status: 'completed', progress: 100 });
-      
-      updateTrainingStep('data-cleaning', { status: 'processing' });
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      const cleaned = cleanData(processed);
-      setCleanedData(cleaned);
-      updateTrainingStep('data-cleaning', { status: 'completed', progress: 100 });
-      
+      const preview = await loadPadangData();
+      setDataPreview(preview);
       setCurrentPhase(1);
     } catch (error) {
-      console.error('Error processing data:', error);
+      console.error('Error loading data:', error);
     } finally {
-      setIsProcessing(false);
+      setIsLoading(false);
     }
   };
 
@@ -127,6 +107,14 @@ export const Training: React.FC = () => {
     setTrainingSteps(prev => prev.map(step => 
       step.id === stepId ? { ...step, ...update } : step
     ));
+  };
+
+  const handleVariableSelection = (selection: VariableSelection) => {
+    setSelectedVariables(selection);
+  };
+
+  const handleProceedToModeling = () => {
+    setCurrentPhase(2);
   };
 
   const handleTrainingComplete = (metrics: ModelMetrics) => {
@@ -143,20 +131,21 @@ export const Training: React.FC = () => {
     const url = URL.createObjectURL(modelBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `plstm_model_${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `plstm_padang_model_${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
-  const downloadCleanedData = () => {
-    if (cleanedData.length === 0) return;
+  const downloadData = () => {
+    if (!dataPreview) return;
     
+    const allData = dataPreview.yearlyData.flatMap(y => y.data);
     const csvContent = [
-      'timestamp,easting,northing,height,subsidence,yearlySubsidence',
-      ...cleanedData.map(row => 
-        `${row.timestamp},${row.easting},${row.northing},${row.height},${row.subsidence},${row.yearlySubsidence}`
+      'timestamp,easting,northing,height,subsidence,yearlySubsidence,velocity,acceleration,temperature,precipitation,groundwaterLevel',
+      ...allData.map(row => 
+        `${row.timestamp},${row.easting},${row.northing},${row.height},${row.subsidence},${row.yearlySubsidence},${row.velocity},${row.acceleration},${row.temperature || ''},${row.precipitation || ''},${row.groundwaterLevel || ''}`
       )
     ].join('\n');
     
@@ -164,7 +153,7 @@ export const Training: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `cleaned_data_${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `padang_subsidence_data_${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -176,10 +165,10 @@ export const Training: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-4">
-            PLSTM Model Training
+            Analisis Penurunan Tanah Kota Padang
           </h1>
           <p className="text-xl text-gray-300">
-            Train a Parallel Long Short-Term Memory model for land subsidence prediction
+            Sistem prediksi penurunan tanah menggunakan model PLSTM dengan data 2021-2024
           </p>
         </div>
 
@@ -214,129 +203,70 @@ export const Training: React.FC = () => {
           </div>
         </div>
 
-        {/* Phase 0: Data Upload */}
+        {/* Phase 0: Load Data */}
         {currentPhase === 0 && (
           <div className="space-y-6">
-            <FileUpload
-              onFileUpload={handleFileUpload}
-              title="Upload RINEX Data"
-              description="Upload your RINEX files (.rinex, .o, .n, .g) for land subsidence analysis"
-            />
-            
-            {isProcessing && (
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
-                <h3 className="text-lg font-semibold text-white mb-4">
-                  Processing Data...
-                </h3>
-                <div className="space-y-3">
-                  {trainingSteps.slice(0, 4).map((step, index) => (
-                    <div key={step.id} className="flex items-center space-x-3">
-                      <div className={`w-4 h-4 rounded-full ${
-                        step.status === 'completed' ? 'bg-green-500' :
-                        step.status === 'processing' ? 'bg-blue-500 animate-pulse' :
-                        'bg-gray-300'
-                      }`} />
-                      <span className="text-sm text-gray-300">{step.title}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Phase 1: Data Processing */}
-        {currentPhase === 1 && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">
-                    Raw Data Summary
-                  </h3>
-                  <Eye className="h-5 w-5 text-gray-400" />
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Total Records:</span>
-                    <span className="font-medium text-white">{processedData.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Date Range:</span>
-                    <span className="font-medium text-white">2022-2024</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Coordinate System:</span>
-                    <span className="font-medium text-white">UTM 48S</span>
-                  </div>
+            <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 text-center">
+              <Database className="h-16 w-16 text-green-400 mx-auto mb-4" />
+              <h3 className="text-2xl font-semibold text-white mb-4">
+                Load Data Penurunan Tanah Padang
+              </h3>
+              <p className="text-gray-300 mb-6">
+                Sistem akan membaca data dari folder 'datapdg' yang berisi data penurunan tanah 
+                Kota Padang dari tahun 2021-2024 yang terbagi dalam folder per tahun.
+              </p>
+              
+              <div className="bg-gray-900 rounded-lg p-4 border border-gray-600 mb-6">
+                <h4 className="text-green-400 font-medium mb-2">Struktur Data yang Akan Dibaca:</h4>
+                <div className="text-left text-sm text-gray-300 space-y-1">
+                  <div>📁 datapdg/</div>
+                  <div className="ml-4">📁 2021/ - Data tahun 2021</div>
+                  <div className="ml-4">📁 2022/ - Data tahun 2022</div>
+                  <div className="ml-4">📁 2023/ - Data tahun 2023</div>
+                  <div className="ml-4">📁 2024/ - Data tahun 2024</div>
                 </div>
               </div>
 
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">
-                    Cleaned Data
-                  </h3>
-                  <button
-                    onClick={downloadCleanedData}
-                    className="flex items-center space-x-2 text-green-400 hover:text-green-300"
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>Download</span>
-                  </button>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Cleaned Records:</span>
-                    <span className="font-medium text-white">{cleanedData.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Quality Score:</span>
-                    <span className="font-medium text-green-600">95.2%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Outliers Removed:</span>
-                    <span className="font-medium text-white">{processedData.length - cleanedData.length}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <DataVisualization
-              data={cleanedData}
-              type="subsidence"
-              title="Land Subsidence Time Series"
-            />
-
-            <div className="flex justify-center">
               <button
-                onClick={() => setCurrentPhase(2)}
-                className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors"
+                onClick={loadData}
+                disabled={isLoading}
+                className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-2 mx-auto"
               >
-                Proceed to Training
+                <Play className="h-5 w-5" />
+                <span>{isLoading ? 'Loading Data...' : 'Mulai Load Data'}</span>
               </button>
             </div>
           </div>
         )}
 
+        {/* Phase 1: Data Preview & Variable Selection */}
+        {currentPhase === 1 && dataPreview && (
+          <DataPreviewComponent
+            dataPreview={dataPreview}
+            onVariableSelection={handleVariableSelection}
+            onProceedToModeling={handleProceedToModeling}
+          />
+        )}
+
         {/* Phase 2: Model Training */}
         {currentPhase === 2 && (
-          <ModelTraining
+          <DetailedTraining
             steps={trainingSteps}
             onStepUpdate={updateTrainingStep}
             onTrainingComplete={handleTrainingComplete}
             config={config}
             onConfigChange={setConfig}
+            selectedVariables={selectedVariables}
           />
         )}
 
         {/* Phase 3: Model Evaluation */}
         {currentPhase === 3 && modelMetrics && (
           <div className="space-y-6">
-            <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-white">
-                  Training Complete
+                <h3 className="text-xl font-semibold text-white">
+                  Training Model Selesai
                 </h3>
                 <div className="flex space-x-3">
                   <button
@@ -347,7 +277,7 @@ export const Training: React.FC = () => {
                     <span>Download Model</span>
                   </button>
                   <button
-                    onClick={downloadCleanedData}
+                    onClick={downloadData}
                     className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
                   >
                     <FileText className="h-4 w-4" />
@@ -358,11 +288,11 @@ export const Training: React.FC = () => {
               <div className="text-center">
                 <BarChart3 className="h-16 w-16 text-green-600 mx-auto mb-4" />
                 <h4 className="text-xl font-semibold text-white mb-2">
-                  PLSTM Model Successfully Trained
+                  Model PLSTM Berhasil Dilatih
                 </h4>
                 <p className="text-gray-300">
-                  Your model achieved {(modelMetrics.accuracy * 100).toFixed(1)}% accuracy 
-                  and is ready for deployment.
+                  Model mencapai akurasi {(modelMetrics.accuracy * 100).toFixed(1)}% 
+                  dan siap untuk prediksi penurunan tanah Kota Padang.
                 </p>
               </div>
             </div>
