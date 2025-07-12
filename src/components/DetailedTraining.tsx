@@ -31,7 +31,6 @@ export const DetailedTraining: React.FC<DetailedTrainingProps> = ({
   
   // Real-time prediction and map states
   const [isRealTimePrediction, setIsRealTimePrediction] = useState(false);
-  const [predictions, setPredictions] = useState<any[]>([]);
   const [subsidencePoints, setSubsidencePoints] = useState<SubsidencePoint[]>([]);
   const [districts, setDistricts] = useState<PadangDistrict[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(2024);
@@ -244,6 +243,7 @@ export const DetailedTraining: React.FC<DetailedTrainingProps> = ({
 
     generatePadangPoints();
   }, [selectedYear, showDataType]);
+
   const getStepIcon = (status: TrainingStep['status']) => {
     switch (status) {
       case 'completed':
@@ -498,6 +498,7 @@ export const DetailedTraining: React.FC<DetailedTrainingProps> = ({
     setZoomLevel(11);
     setSelectedPoint(null);
   };
+
   return (
     <div className="space-y-6">
       {/* Configuration Panel */}
@@ -551,136 +552,136 @@ export const DetailedTraining: React.FC<DetailedTrainingProps> = ({
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Jumlah Layer LSTM (1-10)
-              </label>
-              <input
-                type="number"
-                min="1"
-                max="10"
-                value={config.layers}
-                onChange={(e) => handleConfigChange('layers', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
-              />
-              <p className="text-xs text-gray-400 mt-1">Lebih banyak layer = model lebih kompleks</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Neurons per Layer (32-512)
-              </label>
-              <input
-                type="number"
-                min="32"
-                max="512"
-                step="32"
-                value={config.neurons}
-                onChange={(e) => handleConfigChange('neurons', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
-              />
-              <p className="text-xs text-gray-400 mt-1">Lebih banyak neuron = kapasitas belajar lebih besar</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Jumlah Epochs (10-1000)
-              </label>
-              <input
-                type="number"
-                min="10"
-                max="1000"
-                value={config.epochs}
-                onChange={(e) => handleConfigChange('epochs', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
-              />
-              <p className="text-xs text-gray-400 mt-1">Jumlah iterasi training, lebih banyak = lebih akurat</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Batch Size (8-256)
-              </label>
-              <input
-                type="number"
-                min="8"
-                max="256"
-                value={config.batchSize}
-                onChange={(e) => handleConfigChange('batchSize', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
-              />
-              <p className="text-xs text-gray-400 mt-1">Jumlah sampel per update, lebih besar = lebih stabil</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Learning Rate (0.0001-0.1)
-              </label>
-              <input
-                type="number"
-                min="0.0001"
-                max="0.1"
-                step="0.0001"
-                value={config.learningRate}
-                onChange={(e) => handleConfigChange('learningRate', parseFloat(e.target.value))}
-                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
-              />
-              <p className="text-xs text-gray-400 mt-1">Kecepatan belajar, terlalu besar = tidak stabil</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Sequence Length (7-365 hari)
-              </label>
-              <input
-                type="number"
-                min="7"
-                max="365"
-                value={config.sequenceLength}
-                onChange={(e) => handleConfigChange('sequenceLength', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
-              />
-              <p className="text-xs text-gray-400 mt-1">Panjang data historis untuk prediksi</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Dropout Rate (0-0.8)
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="0.8"
-                step="0.1"
-                value={config.dropoutRate}
-                onChange={(e) => handleConfigChange('dropoutRate', parseFloat(e.target.value))}
-                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
-              />
-              <p className="text-xs text-gray-400 mt-1">Mencegah overfitting, 0.2-0.3 optimal</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Validation Split (0.1-0.4)
-              </label>
-              <input
-                type="number"
-                min="0.1"
-                max="0.4"
-                step="0.05"
-                value={config.validationSplit}
-                onChange={(e) => handleConfigChange('validationSplit', parseFloat(e.target.value))}
-                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
-              />
-              <p className="text-xs text-gray-400 mt-1">Proporsi data untuk validasi</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Parallel Regions (1-20)
-              </label>
-              <input
-                type="number"
-                min="1"
-                max="20"
-                value={config.parallelRegions}
-                onChange={(e) => handleConfigChange('parallelRegions', parseInt(e.target.value))}
-                className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
-              />
-              <p className="text-xs text-gray-400 mt-1">Jumlah region paralel untuk PLSTM</p>
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Jumlah Layer LSTM (1-10)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={config.layers}
+                  onChange={(e) => handleConfigChange('layers', parseInt(e.target.value))}
+                  className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">Lebih banyak layer = model lebih kompleks</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Neurons per Layer (32-512)
+                </label>
+                <input
+                  type="number"
+                  min="32"
+                  max="512"
+                  step="32"
+                  value={config.neurons}
+                  onChange={(e) => handleConfigChange('neurons', parseInt(e.target.value))}
+                  className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">Lebih banyak neuron = kapasitas belajar lebih besar</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Jumlah Epochs (10-1000)
+                </label>
+                <input
+                  type="number"
+                  min="10"
+                  max="1000"
+                  value={config.epochs}
+                  onChange={(e) => handleConfigChange('epochs', parseInt(e.target.value))}
+                  className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">Jumlah iterasi training, lebih banyak = lebih akurat</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Batch Size (8-256)
+                </label>
+                <input
+                  type="number"
+                  min="8"
+                  max="256"
+                  value={config.batchSize}
+                  onChange={(e) => handleConfigChange('batchSize', parseInt(e.target.value))}
+                  className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">Jumlah sampel per update, lebih besar = lebih stabil</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Learning Rate (0.0001-0.1)
+                </label>
+                <input
+                  type="number"
+                  min="0.0001"
+                  max="0.1"
+                  step="0.0001"
+                  value={config.learningRate}
+                  onChange={(e) => handleConfigChange('learningRate', parseFloat(e.target.value))}
+                  className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">Kecepatan belajar, terlalu besar = tidak stabil</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Sequence Length (7-365 hari)
+                </label>
+                <input
+                  type="number"
+                  min="7"
+                  max="365"
+                  value={config.sequenceLength}
+                  onChange={(e) => handleConfigChange('sequenceLength', parseInt(e.target.value))}
+                  className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">Panjang data historis untuk prediksi</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Dropout Rate (0-0.8)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="0.8"
+                  step="0.1"
+                  value={config.dropoutRate}
+                  onChange={(e) => handleConfigChange('dropoutRate', parseFloat(e.target.value))}
+                  className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">Mencegah overfitting, 0.2-0.3 optimal</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Validation Split (0.1-0.4)
+                </label>
+                <input
+                  type="number"
+                  min="0.1"
+                  max="0.4"
+                  step="0.05"
+                  value={config.validationSplit}
+                  onChange={(e) => handleConfigChange('validationSplit', parseFloat(e.target.value))}
+                  className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">Proporsi data untuk validasi</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Parallel Regions (1-20)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="20"
+                  value={config.parallelRegions}
+                  onChange={(e) => handleConfigChange('parallelRegions', parseInt(e.target.value))}
+                  className="w-full p-2 border border-gray-600 bg-gray-700 text-white rounded-md focus:ring-2 focus:ring-green-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">Jumlah region paralel untuk PLSTM</p>
+              </div>
             </div>
           </div>
         )}
@@ -748,10 +749,18 @@ export const DetailedTraining: React.FC<DetailedTrainingProps> = ({
                     <p className="text-sm text-gray-300">{step.description}</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-sm font-medium text-gray-300">
-                    {step.progress.toFixed(1)}%
+                <div className="flex items-center space-x-3">
+                  <div className="text-right">
+                    <div className="text-sm font-medium text-gray-300">
+                      {step.progress.toFixed(1)}%
+                    </div>
                   </div>
+                  <button
+                    onClick={() => setShowAlgorithmDetails(showAlgorithmDetails === step.id ? null : step.id)}
+                    className="text-green-400 hover:text-green-300"
+                  >
+                    <Calculator className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
               
@@ -773,6 +782,33 @@ export const DetailedTraining: React.FC<DetailedTrainingProps> = ({
                         <span>{detail}</span>
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Algorithm Details */}
+              {showAlgorithmDetails === step.id && algorithmExplanations[step.id as keyof typeof algorithmExplanations] && (
+                <div className="mt-4 bg-gray-900 rounded-lg p-4 border border-gray-700">
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <Calculator className="h-5 w-5 text-green-400" />
+                      <h5 className="text-green-400 font-medium">
+                        {algorithmExplanations[step.id as keyof typeof algorithmExplanations].title}
+                      </h5>
+                    </div>
+                    
+                    <div className="bg-gray-800 rounded p-3 border border-gray-600">
+                      <div className="text-green-300 font-mono text-sm mb-2">
+                        Formula: {algorithmExplanations[step.id as keyof typeof algorithmExplanations].formula}
+                      </div>
+                      <div className="text-blue-300 text-xs">
+                        Parameters: {algorithmExplanations[step.id as keyof typeof algorithmExplanations].parameters}
+                      </div>
+                    </div>
+                    
+                    <div className="text-gray-300 text-sm whitespace-pre-line">
+                      {algorithmExplanations[step.id as keyof typeof algorithmExplanations].explanation}
+                    </div>
                   </div>
                 </div>
               )}
@@ -845,43 +881,11 @@ export const DetailedTraining: React.FC<DetailedTrainingProps> = ({
                       <div className="text-xs text-gray-400">{epoch.duration}ms</div>
                     </div>
                     <div className="flex items-center space-x-4 text-sm">
-              {/* Algorithm Details */}
-              {showAlgorithmDetails === step.id && algorithmExplanations[step.id as keyof typeof algorithmExplanations] && (
-                <div className="mt-4 bg-gray-900 rounded-lg p-4 border border-gray-700">
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-2">
-                      <Calculator className="h-5 w-5 text-green-400" />
-                      <h5 className="text-green-400 font-medium">
-                        {algorithmExplanations[step.id as keyof typeof algorithmExplanations].title}
-                      </h5>
-                    </div>
-                    
-                    <div className="bg-gray-800 rounded p-3 border border-gray-600">
-                      <div className="text-green-300 font-mono text-sm mb-2">
-                        Formula: {algorithmExplanations[step.id as keyof typeof algorithmExplanations].formula}
-                      </div>
-                      <div className="text-blue-300 text-xs">
-                        Parameters: {algorithmExplanations[step.id as keyof typeof algorithmExplanations].parameters}
-                      </div>
-                    </div>
-                    
-                    <div className="text-gray-300 text-sm whitespace-pre-line">
-                      {algorithmExplanations[step.id as keyof typeof algorithmExplanations].explanation}
-                    </div>
-                  </div>
-                </div>
-              )}
                       <div className="text-red-400">Loss: {epoch.trainingLoss.toFixed(4)}</div>
                       <div className="text-orange-400">Val: {epoch.validationLoss.toFixed(4)}</div>
                       <div className="text-green-400">Acc: {(epoch.accuracy * 100).toFixed(1)}%</div>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setShowAlgorithmDetails(showAlgorithmDetails === step.id ? null : step.id)}
-                    className="text-green-400 hover:text-green-300"
-                  >
-                    <Calculator className="h-4 w-4" />
-                  </button>
                 ))}
               </div>
             </div>
