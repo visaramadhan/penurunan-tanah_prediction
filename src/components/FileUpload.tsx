@@ -142,7 +142,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             <div className="text-green-300 text-sm space-y-1">
               <p>• Pastikan data memiliki minimal 30 hari pengukuran kontinyu</p>
               <p>• Koordinat dalam sistem UTM 48S untuk wilayah Padang</p>
-              <p>• Akurasi posisi minimal sub-meter (< 1 meter)</p>
+              <p>• Akurasi posisi minimal sub-meter (&lt; 1 meter)</p>
               <p>• Format tanggal konsisten: YYYY-MM-DD atau DD/MM/YYYY</p>
               <p>• Hindari data dengan gap lebih dari 7 hari berturut-turut</p>
             </div>
