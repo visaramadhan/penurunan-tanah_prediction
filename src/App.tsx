@@ -1,10 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Brain, BarChart3, MapPin, Menu, X, BookOpen, Map } from 'lucide-react';
+import { Brain, BarChart3, MapPin, Menu, X, BookOpen } from 'lucide-react';
 import { Training } from './pages/Training';
-import { Prediction } from './pages/Prediction';
 import { Documentation } from './pages/Documentation';
-import { MapView } from './pages/MapView';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
@@ -37,7 +35,7 @@ const Navigation: React.FC = () => {
               }`}
             >
               <Brain className="h-5 w-5" />
-              <span>Model Training</span>
+              <span>Training & Prediction</span>
             </Link>
             <Link
               to="/documentation"
@@ -75,7 +73,7 @@ const Navigation: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Brain className="h-5 w-5" />
-                <span>Model Training</span>
+                <span>Training & Prediction</span>
               </Link>
               <Link
                 to="/documentation"
@@ -112,15 +110,9 @@ const HomePage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/"
-              className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors"
+              className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors text-center"
             >
-              Start Training
-            </Link>
-            <Link
-              to="/prediction"
-              className="bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
-            >
-              Live Prediction
+              Mulai Analisis Padang
             </Link>
           </div>
         </div>
