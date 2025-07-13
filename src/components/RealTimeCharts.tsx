@@ -1,7 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from 'recharts';
-import { format, startOfWeek, startOfMonth, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval } from 'date-fns';
+import { format,  startOfWeek } from 'date-fns';
 import { Calendar, TrendingDown, BarChart3, Activity } from 'lucide-react';
+
+
+const eachDayOfInterval = ({ start, end }: { start: Date; end: Date }) => {
+  const days = [];
+  let currentDate = start;
+  while (currentDate <= end) {
+    days.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  return days;
+};
+const eachMonthOfInterval = ({ start, end }: { start: Date; end: Date }) => {
+  const months = [];
+  let currentDate = new Date(start.getFullYear(), start.getMonth(), 1);
+  const endMonth = new Date(end.getFullYear(), end.getMonth() + 1, 0);
+  while (currentDate <= endMonth) {
+    months.push(new Date(currentDate));
+    currentDate.setMonth(currentDate.getMonth() + 1);
+  }
+  return months;
+};
+
+
+interface ChartData {
+  date: string;
+  fullDate: Date;
+  subsidence: number;
+  velocity: number;
+  acceleration: number;
+  confidence: number;
+  riskLevel: string;
+}
 
 interface RealTimeChartsProps {
   selectedYear: number;
@@ -13,11 +45,13 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
   showDataType
 }) => {
   const [chartType, setChartType] = useState<'daily' | 'weekly' | 'monthly'>('daily');
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Generate mock real-time data
   useEffect(() => {
     const generateData = () => {
+      setLoading(true);
       const startDate = new Date(selectedYear, 0, 1);
       const endDate = new Date(selectedYear, 11, 31);
       
@@ -30,7 +64,13 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           formatString = 'MMM dd';
           break;
         case 'weekly':
-          intervals = eachWeekOfInterval({ start: startDate, end: endDate });
+          // Generate weekly intervals manually
+          let current = startOfWeek(startDate);
+          const end = startOfWeek(endDate);
+          while (current <= end) {
+            intervals.push(current);
+            current = new Date(current.setDate(current.getDate() + 7)); // Move to the next week
+          }
           formatString = 'MMM dd';
           break;
         case 'monthly':
@@ -62,6 +102,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
       });
 
       setChartData(data);
+      setLoading(false);
     };
 
     generateData();
@@ -91,6 +132,22 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
     }
     return null;
   };
+
+  const averageSubsidence = useMemo(() => {
+    return chartData.length > 0 ? (chartData.reduce((sum, d) => sum + d.subsidence, 0) / chartData.length).toFixed(2) : '0.00';
+  }, [chartData]);
+
+  const maxSubsidence = useMemo(() => {
+    return chartData.length > 0 ? Math.max(...chartData.map(d => d.subsidence)).toFixed(2) : '0.00';
+  }, [chartData]);
+
+  const averageConfidence = useMemo(() => {
+    return chartData.length > 0 ? (chartData.reduce((sum, d) => sum + d.confidence, 0) / chartData.length).toFixed(1) : '0.0';
+  }, [chartData]);
+
+  const criticalCount = useMemo(() => {
+    return chartData.filter(d => d.riskLevel === 'critical').length;
+  }, [chartData]);
 
   return (
     <div className="space-y-6">
@@ -130,27 +187,19 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-gray-900 rounded-lg p-3 border border-gray-600">
             <div className="text-sm text-gray-400">Rata-rata Penurunan</div>
-            <div className="text-xl font-bold text-red-400">
-              {chartData.length > 0 ? (chartData.reduce((sum, d) => sum + d.subsidence, 0) / chartData.length).toFixed(2) : '0.00'} cm
-            </div>
+            <div className="text-xl font-bold text-red-400">{averageSubsidence} cm</div>
           </div>
           <div className="bg-gray-900 rounded-lg p-3 border border-gray-600">
             <div className="text-sm text-gray-400">Penurunan Maksimal</div>
-            <div className="text-xl font-bold text-orange-400">
-              {chartData.length > 0 ? Math.max(...chartData.map(d => d.subsidence)).toFixed(2) : '0.00'} cm
-            </div>
+            <div className="text-xl font-bold text-orange-400">{maxSubsidence} cm</div>
           </div>
           <div className="bg-gray-900 rounded-lg p-3 border border-gray-600">
             <div className="text-sm text-gray-400">Confidence Rata-rata</div>
-            <div className="text-xl font-bold text-blue-400">
-              {chartData.length > 0 ? (chartData.reduce((sum, d) => sum + d.confidence, 0) / chartData.length).toFixed(1) : '0.0'}%
-            </div>
+            <div className="text-xl font-bold text-blue-400">{averageConfidence}%</div>
           </div>
           <div className="bg-gray-900 rounded-lg p-3 border border-gray-600">
             <div className="text-sm text-gray-400">Titik Kritis</div>
-            <div className="text-xl font-bold text-red-400">
-              {chartData.filter(d => d.riskLevel === 'critical').length}
-            </div>
+            <div className="text-xl font-bold text-red-400">{criticalCount}</div>
           </div>
         </div>
       </div>
@@ -163,31 +212,35 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
             ({showDataType === 'real' ? 'Data Observasi' : 'Data Prediksi'})
           </span>
         </h4>
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-            <XAxis 
-              dataKey="date" 
-              stroke="#9ca3af"
-              fontSize={12}
-            />
-            <YAxis 
-              stroke="#9ca3af"
-              fontSize={12}
-              label={{ value: 'Penurunan (cm)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#9ca3af' } }}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Area
-              type="monotone"
-              dataKey="subsidence"
-              stroke="#ef4444"
-              fill="#ef4444"
-              fillOpacity={0.3}
-              strokeWidth={2}
-              name="Penurunan Tanah"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        {loading ? (
+          <div className="text-center text-gray-400">Loading...</div>
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <XAxis 
+                dataKey="date" 
+                stroke="#9ca3af"
+                fontSize={12}
+              />
+              <YAxis 
+                stroke="#9ca3af"
+                fontSize={12}
+                label={{ value: 'Penurunan (cm)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#9ca3af' } }}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <Area
+                type="monotone"
+                dataKey="subsidence"
+                stroke="#ef4444"
+                fill="#ef4444"
+                fillOpacity={0.3}
+                strokeWidth={2}
+                name="Penurunan Tanah"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
       {/* Velocity and Acceleration Charts */}
